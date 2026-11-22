@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 `include "fifo_if.sv"
+`include "fifo_transaction.sv"
 
 module tb;
   localparam int WIDTH = 8;

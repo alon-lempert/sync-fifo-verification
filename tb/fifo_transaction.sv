@@ -1,3 +1,11 @@
+//------------------------------------------------------------
+// File        : fifo_transaction.sv
+// Description : Transaction class representing one FIFO
+//               cycle: randomized stimulus (wr_en, rd_en,
+//               wr_data) and observed outputs (rd_data,
+//               full, empty).
+//------------------------------------------------------------
+
 class fifo_transaction #(parameter int WIDTH = 8);
   // stimulus (randomized)
   rand bit             wr_en;

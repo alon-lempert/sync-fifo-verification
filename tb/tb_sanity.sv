@@ -1,13 +1,21 @@
+//------------------------------------------------------------
+// File        : tb_sanity.sv
+// Description : Directed sanity testbench for sync_fifo.
+//               Fills the FIFO and drains it, for visual
+//               waveform inspection (not self-checking).
+//------------------------------------------------------------
+
 `timescale 1ns/1ps
 `include "fifo_if.sv"
 `include "fifo_transaction.sv"
+`include "fifo_generator.sv"
 
 module tb;
   localparam int WIDTH = 8;
   localparam int DEPTH = 4;
   logic clk;
 
-  // interface instance
+  // Interface instance
   fifo_if #(.WIDTH(WIDTH)) fif (.clk(clk));
 
   // DUT instance
@@ -22,21 +30,24 @@ module tb;
     .empty   (fif.empty)
   );
   
-  
+  // Clock generation: 100 MHz (10 ns period)
   initial clk=0;
   always #5 clk = ~clk;
-  
+
+  // Waveform dump
   initial begin
     $dumpfile("dump.vcd");
     $dumpvars;
   end
-  
+
+  // Stimulus: reset, fill FIFO, then drain it
   initial begin
     fif.wr_en = 0;
     fif.wr_data = 0;
     fif.rd_en = 0;
     fif.rst_n = 0;
-    
+
+    // apply reset for 2 cycles
     repeat(2) @(negedge clk);
     fif.rst_n = 1;
     
@@ -51,12 +62,10 @@ module tb;
     // read 4 entries
     fif.rd_en = 1;
     repeat(4) @(negedge clk);
-    fif.rd_en = 0;
-        
+    fif.rd_en = 0;        
     
     repeat(2) @(negedge clk);
-    $finish();
-    
+    $finish();    
   end
   
 endmodule

@@ -1,3 +1,10 @@
+//------------------------------------------------------------
+// File        : fifo_if.sv
+// Description : Interface bundling all sync_fifo signals.
+//               Connects the DUT to the class-based
+//               testbench via a virtual interface.
+//------------------------------------------------------------
+
 `timescale 1ns/1ps
 
 interface fifo_if #(parameter int WIDTH = 8) (input logic clk);

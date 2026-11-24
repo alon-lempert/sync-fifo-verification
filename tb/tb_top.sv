@@ -11,6 +11,7 @@
 `include "fifo_transaction.sv" 
 `include "fifo_generator.sv"
 `include "fifo_driver.sv"
+`include "fifo_monitor.sv"
 
 module tb;
   localparam int WIDTH = 8;
@@ -42,20 +43,25 @@ module tb;
     $dumpvars;
   end
 
-  // Generator + driver
+  // Test: generator + driver + monitor
   initial begin
-    mailbox #(fifo_transaction #(WIDTH)) mbx;
+    mailbox #(fifo_transaction #(WIDTH)) gen2drv;
+    mailbox #(fifo_transaction #(WIDTH)) mon2scb;
     fifo_generator #(WIDTH) gen;
     fifo_driver    #(WIDTH) drv;
+    fifo_monitor   #(WIDTH) mon;
     
-    mbx = new();
-    gen = new(mbx, 10);
-    drv = new(mbx, fif);
+    gen2drv = new();
+    mon2scb = new();
+    gen = new(gen2drv, 10);
+    drv = new(gen2drv, fif);
+    mon = new(mon2scb, fif);
 
     drv.reset();
     fork
       gen.run();
       drv.run();
+      mon.run();
     join_none
 
     wait (drv.num_driven == 10);

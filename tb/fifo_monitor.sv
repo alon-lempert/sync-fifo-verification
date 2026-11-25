@@ -9,6 +9,7 @@
 class fifo_monitor #(parameter int WIDTH = 8);
   mailbox #(fifo_transaction #(WIDTH)) mbx;
   virtual fifo_if #(WIDTH)             vif;
+  
   function new(mailbox #(fifo_transaction #(WIDTH)) mbx,
                virtual fifo_if #(WIDTH) vif); 
     this.mbx = mbx;  
